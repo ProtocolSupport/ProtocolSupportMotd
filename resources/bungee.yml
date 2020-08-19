@@ -1,0 +1,5 @@
+name: ProtocolSupportMotd
+main: protocolsupportmotd.ProtocolSupportMotdBungee
+depend: [ProtocolSupportBungee]
+version: 1.0
+author: _Shevchik_

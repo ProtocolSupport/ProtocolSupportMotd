@@ -1,0 +1,14 @@
+name: ProtocolSupportMotd
+main: protocolsupportmotd.ProtocolSupportMotdBukkit
+api-version: 1.13
+depend: [ProtocolSupport]
+version: 1.0
+authors:
+- _Shevchik_
+load: STARTUP
+commands:
+  protocolsupportmotd:
+    aliases: psm
+    description: All ProtocolSupport commands
+    permission: protocolsupportmotd.admin
+    usage: '<command> reload'

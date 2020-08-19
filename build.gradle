@@ -1,0 +1,95 @@
+import java.nio.file.Path
+import java.nio.file.Paths
+import java.nio.file.Files
+
+plugins {
+	id 'com.github.johnrengelman.shadow' version '5.0.0'
+	id 'java'
+}
+
+apply from: 'gradle/helper.gradle'
+
+
+defaultTasks 'build'
+
+
+group 'protocolsupport'
+version '1.0'
+
+
+Path projectDirectoryPath = projectDir.toPath().toAbsolutePath()
+
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+
+sourceSets {
+	main {
+		java {
+			srcDirs = ['src']
+		}
+		resources {
+			srcDirs = ['resources']
+		}
+	}
+}
+
+repositories {
+	mavenCentral()
+	jcenter()
+	maven {
+		url 'https://oss.sonatype.org/content/repositories/snapshots/'
+	}
+	maven {
+		url 'https://hub.spigotmc.org/nexus/content/repositories/public/'
+	}
+	maven {
+		url 'https://papermc.io/repo/repository/maven-public/'
+	}
+	maven {
+		url 'https://jitpack.io'
+	}
+}
+
+
+dependencies {
+	compileOnly group: 'com.github.ProtocolSupport', name: 'ProtocolSupport', version: 'b4cead452a'
+	compileOnly group: 'com.destroystokyo.paper', name: 'paper-api', version: '1.16.2-R0.1-SNAPSHOT'
+	compileOnly group: 'net.md-5', name: 'bungeecord-api', version: '1.16-R0.2-SNAPSHOT'
+}
+
+compileJava {
+	doFirst {
+	    classpath -= configurations.compileOnly
+	    classpath += configurations.compileOnly
+	}
+
+	options.encoding = 'UTF-8'
+	options.incremental = false
+}
+
+
+shadowJar {
+	from sourceSets.main.java.srcDirs
+	from 'LICENSE'
+
+	archiveName = jar.archiveName
+
+	exclude 'META-INF/**'
+}
+
+
+task copyFinalJarToTarget(type: DefaultTask) {doLast{
+	Path targetJarDirectory = projectDirectoryPath.resolve("target")
+	Files.createDirectories(targetJarDirectory)
+	java.nio.file.Files.copy(
+		shadowJar.archivePath.toPath().toAbsolutePath(),
+		targetJarDirectory.resolve(jar.baseName + '.jar'),
+		java.nio.file.StandardCopyOption.REPLACE_EXISTING
+	)
+}}
+
+
+compileJava.dependsOn(clean)
+jar.enabled = false
+jar.finalizedBy(shadowJar)
+shadowJar.finalizedBy(copyFinalJarToTarget)

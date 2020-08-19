@@ -1,0 +1,28 @@
+# Build Folders #
+bin/
+build/
+target/
+gen/
+libraries_runtime/
+libraries_shade/
+logs/
+
+# Gradle
+.gradle
+.gradletasknamecache
+
+ # Eclipse Files #
+*.project
+*.classpath
+*.prefs
+*.factorypath
+.apt_generated/
+.externalToolBuilders/
+
+# Netbeans
+.nb-gradle/
+
+# IntelliJ
+.idea/
+*.iml
+
